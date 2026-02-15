@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: 'バリデーションエラー', details: result.error.errors },
+        { error: 'バリデーションエラー', details: result.error.issues },
         { status: 400 }
       );
     }
