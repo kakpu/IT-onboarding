@@ -30,6 +30,11 @@ async function getChecklistItems(day: number) {
  */
 export default async function Day1Page() {
   const items = await getChecklistItems(1);
+  // 進捗データは空配列で初期化（クライアント側で更新される）
+  const progress: Array<{
+    checklist_item_id: string;
+    status: 'pending' | 'resolved' | 'unresolved';
+  }> = [];
 
   return (
     <div className="container mx-auto p-4">
@@ -45,7 +50,7 @@ export default async function Day1Page() {
       <h1 className="text-2xl font-bold mb-6">Day1 初期設定</h1>
 
       {/* チェックリスト */}
-      <ChecklistList items={items} />
+      <ChecklistList items={items} progress={progress} />
     </div>
   );
 }

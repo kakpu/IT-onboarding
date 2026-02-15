@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { ChecklistCard } from './checklist-card';
 
 type ChecklistItem = {
@@ -15,43 +14,33 @@ type ChecklistItem = {
   is_active: boolean;
 };
 
+type UserProgress = {
+  checklist_item_id: string;
+  status: 'pending' | 'resolved' | 'unresolved';
+};
+
 type ChecklistListProps = {
   items: ChecklistItem[];
+  progress: UserProgress[];
 };
 
 /**
  * チェックリスト項目リストコンポーネント
  * @param items - チェックリスト項目の配列
+ * @param progress - ユーザー進捗データの配列
  */
-export function ChecklistList({ items }: ChecklistListProps) {
-  // ローカルステートで完了状態を管理（Issue #7で API連携に変更予定）
-  const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
-
-  const handleToggle = (itemId: string, completed: boolean) => {
-    setCompletedItems((prev) => {
-      const newSet = new Set(prev);
-      if (completed) {
-        newSet.add(itemId);
-      } else {
-        newSet.delete(itemId);
-      }
-      return newSet;
-    });
-  };
-
+export function ChecklistList({ items, progress }: ChecklistListProps) {
   if (!items || items.length === 0) {
     return <p className="text-gray-600">チェックリスト項目がありません</p>;
   }
 
+  // 進捗データをMapに変換して高速検索
+  const progressMap = new Map(progress.map((p) => [p.checklist_item_id, p.status]));
+
   return (
     <div className="space-y-4">
       {items.map((item) => (
-        <ChecklistCard
-          key={item.id}
-          item={item}
-          isCompleted={completedItems.has(item.id)}
-          onToggle={handleToggle}
-        />
+        <ChecklistCard key={item.id} item={item} status={progressMap.get(item.id) || 'pending'} />
       ))}
     </div>
   );
