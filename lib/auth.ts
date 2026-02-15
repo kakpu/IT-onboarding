@@ -10,7 +10,6 @@ import { authConfig } from './auth.config';
  */
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  debug: process.env.NODE_ENV === 'development',
   providers: [
     Credentials({
       name: 'credentials',
