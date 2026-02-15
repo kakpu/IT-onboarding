@@ -48,6 +48,8 @@ export function UserSetupDialog() {
       }
 
       setOpen(false);
+      // UserGreetingに名前の変更を通知
+      window.dispatchEvent(new CustomEvent('user-name-updated', { detail: userName }));
     } catch (error) {
       console.error('Failed to create user:', error);
       alert('エラーが発生しました。もう一度お試しください。');

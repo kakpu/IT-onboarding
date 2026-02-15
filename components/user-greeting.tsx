@@ -13,6 +13,14 @@ export function UserGreeting() {
   useEffect(() => {
     // クライアントサイドでユーザー名を取得
     setUserName(getUserName() || 'ゲスト');
+
+    // ユーザー名更新イベントをリスン
+    const handleUpdate = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail;
+      setUserName(detail || 'ゲスト');
+    };
+    window.addEventListener('user-name-updated', handleUpdate);
+    return () => window.removeEventListener('user-name-updated', handleUpdate);
   }, []);
 
   return (

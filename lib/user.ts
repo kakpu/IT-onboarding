@@ -39,10 +39,10 @@ export function setUserName(name: string) {
 }
 
 /**
- * ユーザー情報が既に存在するか確認
- * @returns ユーザーIDが保存されている場合はtrue
+ * ユーザーのセットアップが完了しているか確認
+ * @returns ユーザー名が保存されている場合はtrue
  */
 export function hasUser(): boolean {
   if (typeof window === 'undefined') return false;
-  return !!localStorage.getItem(USER_ID_KEY);
+  return !!localStorage.getItem(USER_NAME_KEY);
 }
