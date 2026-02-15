@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
 
 /**
  * チェックリスト項目取得APIのクエリパラメータスキーマ
@@ -16,6 +17,11 @@ const ChecklistItemsQuerySchema = z.object({
  */
 export async function GET(request: NextRequest) {
   try {
+    // 認証チェック
+    const session = await auth();
+    if (!session?.user?.id) {
+      return Response.json({ error: '認証が必要です' }, { status: 401 });
+    }
     const { searchParams } = new URL(request.url);
     const day = searchParams.get('day');
 

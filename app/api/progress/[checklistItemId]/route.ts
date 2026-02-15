@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
 
 /**
  * 進捗更新APIのリクエストボディスキーマ
@@ -8,7 +9,6 @@ import { createClient } from '@/lib/supabase/server';
 const UpdateProgressSchema = z.object({
   status: z.enum(['pending', 'resolved', 'unresolved']),
   notes: z.string().optional(),
-  userId: z.string().uuid(),
 });
 
 /**
@@ -22,6 +22,13 @@ export async function PUT(
   { params }: { params: Promise<{ checklistItemId: string }> }
 ) {
   try {
+    // 認証チェック
+    const session = await auth();
+    if (!session?.user?.id) {
+      return Response.json({ error: '認証が必要です' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
     const { checklistItemId } = await params;
     const body = await request.json();
 
@@ -38,7 +45,7 @@ export async function PUT(
       );
     }
 
-    const { status, notes, userId } = result.data;
+    const { status, notes } = result.data;
 
     const supabase = await createClient();
 

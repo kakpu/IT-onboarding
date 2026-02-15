@@ -58,14 +58,13 @@ export function DayProgressCards() {
   };
 
   useEffect(() => {
-    const userId = session?.user?.id;
-    if (!userId) return;
+    if (!session?.user?.id) return;
 
     const fetchData = async () => {
       try {
         const [countRes, progressRes] = await Promise.all([
           fetch('/api/checklist-items/count'),
-          fetch(`/api/progress/user/${userId}`),
+          fetch('/api/progress/me'),
         ]);
 
         if (countRes.ok) {

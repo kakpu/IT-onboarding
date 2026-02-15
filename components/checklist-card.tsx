@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,6 @@ type ChecklistCardProps = {
  * @param status - 進捗状態
  */
 export function ChecklistCard({ item, status: initialStatus = 'pending' }: ChecklistCardProps) {
-  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [currentStatus, setCurrentStatus] = useState<'pending' | 'resolved' | 'unresolved'>(
     initialStatus
@@ -30,7 +28,7 @@ export function ChecklistCard({ item, status: initialStatus = 'pending' }: Check
       const res = await fetch(`/api/progress/${item.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus, userId: session?.user?.id }),
+        body: JSON.stringify({ status: newStatus }),
       });
       if (!res.ok) throw new Error('進捗の更新に失敗しました');
       return res.json();

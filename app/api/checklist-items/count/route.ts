@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
 
 /**
  * Day別のチェックリスト項目数を取得するGET API
@@ -6,6 +7,11 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function GET() {
   try {
+    // 認証チェック
+    const session = await auth();
+    if (!session?.user?.id) {
+      return Response.json({ error: '認証が必要です' }, { status: 401 });
+    }
     const supabase = await createClient();
 
     const { data, error } = await supabase

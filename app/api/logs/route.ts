@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
 
 /**
  * ログ記録APIのリクエストボディスキーマ
  */
 const CreateLogSchema = z.object({
-  userId: z.string().uuid(),
   checklistItemId: z.string().uuid().optional(),
   action: z.enum(['view', 'resolve', 'unresolve', 'contact_click', 'share_link']),
   metadata: z.record(z.string(), z.unknown()).optional(),
@@ -18,6 +18,16 @@ const CreateLogSchema = z.object({
  */
 export async function POST(request: Request) {
   try {
+    // 認証チェック
+    const session = await auth();
+    if (!session?.user?.id) {
+      return Response.json(
+        { error: { code: 'UNAUTHORIZED', message: '認証が必要です' } },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
     const body = await request.json();
 
     // バリデーション
@@ -36,7 +46,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { userId, checklistItemId, action, metadata } = result.data;
+    const { checklistItemId, action, metadata } = result.data;
 
     const supabase = await createClient();
 
