@@ -8,7 +8,7 @@ const CreateLogSchema = z.object({
   userId: z.string().uuid(),
   checklistItemId: z.string().uuid().optional(),
   action: z.enum(['view', 'resolve', 'unresolve', 'contact_click', 'share_link']),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

@@ -2,12 +2,14 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { compare } from 'bcryptjs';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { authConfig } from './auth.config';
 
 /**
- * NextAuth.js v5 設定
- * Credentials Provider（メールアドレス＋パスワード認証）
+ * NextAuth.js v5 完全設定（Node.jsランタイム）
+ * Credentials Provider（メールアドレス＋パスワード認証）を含む
  */
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       name: 'credentials',
@@ -51,31 +53,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  pages: {
-    signIn: '/auth/signin',
-  },
-  callbacks: {
-    /** ミドルウェア用：未認証ユーザーをログインページへリダイレクト */
-    authorized({ auth }) {
-      return !!auth?.user;
-    },
-    /** JWTトークンにユーザー情報を含める */
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = (user as { role?: string }).role;
-      }
-      return token;
-    },
-    /** セッションにユーザーID・ロールを公開 */
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        (session.user as { role?: string }).role = token.role as string;
-      }
-      return session;
-    },
-  },
   session: {
     strategy: 'jwt',
   },
