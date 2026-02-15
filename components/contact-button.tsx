@@ -10,7 +10,9 @@ import { CONTACT_URL, CONTACT_LABEL } from '@/lib/config';
 export function ContactButton() {
   return (
     <a href={CONTACT_URL} target="_blank" rel="noopener noreferrer">
-      <Button variant="outline">💬 {CONTACT_LABEL}</Button>
+      <Button variant="outline" className="min-h-[44px]">
+        💬 {CONTACT_LABEL}
+      </Button>
     </a>
   );
 }

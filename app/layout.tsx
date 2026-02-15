@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { UserSetupDialog } from '@/components/user-setup-dialog';
 import { UserGreeting } from '@/components/user-greeting';
@@ -7,6 +7,11 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'ITオンボーディング',
   description: 'Day1-3のIT初期設定をサポート',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -19,8 +24,8 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col">
         <Providers>
           <header className="border-b bg-white">
-            <div className="container mx-auto flex items-center justify-between p-4">
-              <h1 className="text-xl font-bold">ITオンボーディング</h1>
+            <div className="container mx-auto flex items-center justify-between px-4 py-3 sm:py-4">
+              <h1 className="text-lg font-bold sm:text-xl">ITオンボーディング</h1>
               <UserGreeting />
             </div>
           </header>

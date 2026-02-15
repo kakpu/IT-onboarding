@@ -53,14 +53,15 @@ export function ChecklistCard({ item, status: initialStatus = 'pending' }: Check
           </p>
         )}
       </CardHeader>
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex flex-wrap gap-2">
         <Link href={`/checklist/${item.id}`}>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="min-h-[44px]">
             詳細を見る
           </Button>
         </Link>
         <Button
           size="sm"
+          className="min-h-[44px]"
           onClick={() => updateProgress.mutate('resolved')}
           disabled={updateProgress.isPending}
         >
@@ -69,6 +70,7 @@ export function ChecklistCard({ item, status: initialStatus = 'pending' }: Check
         <Button
           variant="destructive"
           size="sm"
+          className="min-h-[44px]"
           onClick={() => updateProgress.mutate('unresolved')}
           disabled={updateProgress.isPending}
         >

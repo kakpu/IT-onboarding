@@ -82,9 +82,9 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
       )}
 
       {/* アクションボタン */}
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <Button
-          className="flex-1"
+          className="min-h-[44px] flex-1"
           onClick={() => updateProgress.mutate('resolved')}
           disabled={updateProgress.isPending}
         >
@@ -92,7 +92,7 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
         </Button>
         <Button
           variant="destructive"
-          className="flex-1"
+          className="min-h-[44px] flex-1"
           onClick={() => updateProgress.mutate('unresolved')}
           disabled={updateProgress.isPending}
         >
@@ -101,7 +101,7 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
       </div>
 
       {/* リンク共有ボタン */}
-      <Button variant="secondary" className="w-full" onClick={handleCopyLink}>
+      <Button variant="secondary" className="min-h-[44px] w-full" onClick={handleCopyLink}>
         {copied ? '✓ コピーしました！' : '🔗 この手順を送る'}
       </Button>
 
@@ -112,14 +112,14 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
         rel="noopener noreferrer"
         onClick={() => sendLog('contact_click', itemId)}
       >
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="min-h-[44px] w-full">
           💬 {CONTACT_LABEL}
         </Button>
       </a>
 
       {/* 戻るリンク */}
       <Link href={`/day/${day}`}>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="min-h-[44px] w-full">
           ← Day{day}に戻る
         </Button>
       </Link>

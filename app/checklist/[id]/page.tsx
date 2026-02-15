@@ -48,7 +48,7 @@ export default async function ChecklistDetailPage({ params }: { params: Promise<
   return (
     <div className="container mx-auto max-w-2xl p-4">
       {/* パンくずリスト */}
-      <nav className="mb-4 text-sm text-gray-600">
+      <nav className="mb-4 text-xs text-gray-600 sm:text-sm">
         <Link href="/" className="hover:underline">
           ホーム
         </Link>
@@ -65,10 +65,10 @@ export default async function ChecklistDetailPage({ params }: { params: Promise<
       </span>
 
       {/* タイトル */}
-      <h1 className="mb-2 text-2xl font-bold">{checklistItem.title}</h1>
+      <h1 className="mb-2 text-xl font-bold sm:text-2xl">{checklistItem.title}</h1>
 
       {/* 概要 */}
-      <p className="mb-6 text-gray-600">{checklistItem.summary}</p>
+      <p className="mb-6 text-sm text-gray-600 sm:text-base">{checklistItem.summary}</p>
 
       {/* 手順セクション */}
       <section className="mb-6">

@@ -64,8 +64,8 @@ export default async function DayPage({ params }: { params: Promise<{ day: strin
       </nav>
 
       {/* ページタイトル */}
-      <h1 className="text-2xl font-bold mb-2">{config.title}</h1>
-      <p className="text-gray-600 mb-6">{config.description}</p>
+      <h1 className="text-xl font-bold mb-2 sm:text-2xl">{config.title}</h1>
+      <p className="text-sm text-gray-600 mb-6 sm:text-base">{config.description}</p>
 
       {/* チェックリスト */}
       <ChecklistList items={items} progress={progress} />

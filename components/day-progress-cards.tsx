@@ -85,21 +85,21 @@ export function DayProgressCards() {
       )}
 
       {/* Day別カード */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {DAYS.map(({ day, title, description }) => {
           const dayCount = dayItems.find((d) => d.day === day)?.count || 0;
           const dayResolved = getResolvedCount(day);
 
           return (
             <Card key={day} className="flex flex-col">
-              <CardHeader>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-base sm:text-lg">{title}</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">{description}</CardDescription>
               </CardHeader>
               <CardContent className="mt-auto space-y-3">
                 {dayCount > 0 && <ProgressBar completed={dayResolved} total={dayCount} />}
                 <Link href={`/day/${day}`}>
-                  <Button className="w-full">詳細を見る →</Button>
+                  <Button className="min-h-[44px] w-full">詳細を見る →</Button>
                 </Link>
               </CardContent>
             </Card>
