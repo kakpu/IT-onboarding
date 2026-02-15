@@ -1,22 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUserId } from '@/lib/user';
-
-type ChecklistItem = {
-  id: string;
-  day: number;
-  category: string;
-  title: string;
-  summary: string;
-  steps: Array<string>;
-  notes: string | null;
-  order_index: number;
-  is_active: boolean;
-};
+import type { ChecklistItem } from '@/lib/types';
 
 type ChecklistCardProps = {
   item: ChecklistItem;
@@ -64,8 +54,13 @@ export function ChecklistCard({ item, status: initialStatus = 'pending' }: Check
         )}
       </CardHeader>
       <CardFooter className="flex gap-2">
+        <Link href={`/checklist/${item.id}`}>
+          <Button variant="outline" size="sm">
+            詳細を見る
+          </Button>
+        </Link>
         <Button
-          variant="default"
+          size="sm"
           onClick={() => updateProgress.mutate('resolved')}
           disabled={updateProgress.isPending}
         >
@@ -73,6 +68,7 @@ export function ChecklistCard({ item, status: initialStatus = 'pending' }: Check
         </Button>
         <Button
           variant="destructive"
+          size="sm"
           onClick={() => updateProgress.mutate('unresolved')}
           disabled={updateProgress.isPending}
         >

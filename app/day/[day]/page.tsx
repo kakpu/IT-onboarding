@@ -1,11 +1,20 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ChecklistList } from '@/components/checklist-list';
 import { createClient } from '@/lib/supabase/server';
 
+/** Day別の設定情報 */
+const DAY_CONFIG: Record<number, { title: string; description: string }> = {
+  1: { title: 'Day1 初期設定', description: 'ログイン・M365・Teams・iPhone初期設定' },
+  2: {
+    title: 'Day2 ポータル・ツール設定',
+    description: 'ポータル・プリンタ・VPN・セキュリティ確認',
+  },
+  3: { title: 'Day3 トラブル対応', description: 'よくあるトラブルの対処法' },
+};
+
 /**
  * チェックリスト項目を取得
- * @param day - 日数（1, 2, 3）
- * @returns チェックリスト項目の配列
  */
 async function getChecklistItems(day: number) {
   const supabase = await createClient();
@@ -26,11 +35,18 @@ async function getChecklistItems(day: number) {
 }
 
 /**
- * Day1チェックリストページ
+ * Day別チェックリストページ（Day1/Day2/Day3共通）
  */
-export default async function Day1Page() {
-  const items = await getChecklistItems(1);
-  // 進捗データは空配列で初期化（クライアント側で更新される）
+export default async function DayPage({ params }: { params: Promise<{ day: string }> }) {
+  const { day: dayParam } = await params;
+  const day = Number(dayParam);
+
+  if (![1, 2, 3].includes(day)) {
+    notFound();
+  }
+
+  const config = DAY_CONFIG[day];
+  const items = await getChecklistItems(day);
   const progress: Array<{
     checklist_item_id: string;
     status: 'pending' | 'resolved' | 'unresolved';
@@ -43,11 +59,12 @@ export default async function Day1Page() {
         <Link href="/" className="hover:underline">
           ホーム
         </Link>
-        {' > Day1'}
+        {` > ${config.title.split(' ')[0]}`}
       </nav>
 
       {/* ページタイトル */}
-      <h1 className="text-2xl font-bold mb-6">Day1 初期設定</h1>
+      <h1 className="text-2xl font-bold mb-2">{config.title}</h1>
+      <p className="text-gray-600 mb-6">{config.description}</p>
 
       {/* チェックリスト */}
       <ChecklistList items={items} progress={progress} />
