@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { UserSetupDialog } from '@/components/user-setup-dialog';
 
 export const metadata: Metadata = {
   title: 'ITオンボーディング',
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body>
+        {children}
+        <UserSetupDialog />
+      </body>
     </html>
   );
 }
