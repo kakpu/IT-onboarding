@@ -19,3 +19,19 @@ export type UserProgress = {
   checklist_item_id: string;
   status: ProgressStatus;
 };
+
+/** ランキング項目（管理ダッシュボード用） */
+export type RankedItem = {
+  checklistItemId: string;
+  title: string;
+  count: number;
+};
+
+/** 管理ダッシュボード統計データ */
+export type AdminStats = {
+  totalUsers: number;
+  activeUsers: number;
+  completionRate: number;
+  topUnresolvedItems: RankedItem[];
+  mostViewedItems: RankedItem[];
+};

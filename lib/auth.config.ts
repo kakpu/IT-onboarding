@@ -10,9 +10,21 @@ export const authConfig = {
     signIn: '/auth/signin',
   },
   callbacks: {
-    /** ミドルウェア用：未認証ユーザーをログインページへリダイレクト */
-    authorized({ auth }) {
-      return !!auth?.user;
+    /** ミドルウェア用：認証・認可チェック */
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isAdminPath = nextUrl.pathname.startsWith('/admin');
+
+      if (isAdminPath) {
+        if (!isLoggedIn) return false;
+        const role = (auth?.user as { role?: string })?.role;
+        if (role !== 'admin' && role !== 'trainer') {
+          return Response.redirect(new URL('/403', nextUrl));
+        }
+        return true;
+      }
+
+      return isLoggedIn;
     },
     /** JWTトークンにユーザー情報を含める */
     jwt({ token, user }) {

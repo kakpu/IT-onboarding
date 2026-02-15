@@ -5,18 +5,48 @@ describe('authConfig callbacks', () => {
   describe('authorized()', () => {
     const authorized = authConfig.callbacks.authorized!;
 
-    it('認証済みユーザーはtrueを返す', () => {
+    const mockRequest = (pathname: string) => ({
+      request: { nextUrl: new URL(`http://localhost:3000${pathname}`) },
+    });
+
+    it('認証済みユーザーは一般ページにアクセスできる', () => {
       const result = authorized({
         auth: { user: { id: '1', name: 'Test' } },
+        ...mockRequest('/'),
       } as Parameters<typeof authorized>[0]);
       expect(result).toBe(true);
     });
 
-    it('未認証（auth=null）はfalseを返す', () => {
+    it('未認証ユーザーはfalseを返す', () => {
       const result = authorized({
         auth: null,
+        ...mockRequest('/'),
       } as Parameters<typeof authorized>[0]);
       expect(result).toBe(false);
+    });
+
+    it('adminロールは/adminにアクセスできる', () => {
+      const result = authorized({
+        auth: { user: { id: '1', name: 'Admin', role: 'admin' } },
+        ...mockRequest('/admin'),
+      } as Parameters<typeof authorized>[0]);
+      expect(result).toBe(true);
+    });
+
+    it('trainerロールは/adminにアクセスできる', () => {
+      const result = authorized({
+        auth: { user: { id: '1', name: 'Trainer', role: 'trainer' } },
+        ...mockRequest('/admin'),
+      } as Parameters<typeof authorized>[0]);
+      expect(result).toBe(true);
+    });
+
+    it('userロールは/adminにアクセスするとリダイレクトされる', () => {
+      const result = authorized({
+        auth: { user: { id: '1', name: 'User', role: 'user' } },
+        ...mockRequest('/admin'),
+      } as Parameters<typeof authorized>[0]);
+      expect(result).toBeInstanceOf(Response);
     });
   });
 

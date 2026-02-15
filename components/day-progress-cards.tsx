@@ -107,7 +107,7 @@ export function DayProgressCards() {
     <div className="space-y-6">
       {/* 全体の進捗 */}
       {totalItems > 0 && (
-        <div className="rounded-lg border bg-white p-4">
+        <div className="rounded-lg border bg-background p-4">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="font-semibold">全体の進捗</h2>
             <div className="flex items-center gap-2">
@@ -131,7 +131,7 @@ export function DayProgressCards() {
       )}
 
       {/* Day別カード */}
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 landscape:grid-cols-3 lg:grid-cols-3">
         {DAYS.map(({ day, title, description }) => {
           const dayCount = dayItems.find((d) => d.day === day)?.count || 0;
           const dayResolved = getResolvedCount(day);
