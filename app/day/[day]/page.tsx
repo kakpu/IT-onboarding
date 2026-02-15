@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChecklistList } from '@/components/checklist-list';
+import { ContactButton } from '@/components/contact-button';
 import { createClient } from '@/lib/supabase/server';
 
 /** Day別の設定情報 */
@@ -68,6 +69,12 @@ export default async function DayPage({ params }: { params: Promise<{ day: strin
 
       {/* チェックリスト */}
       <ChecklistList items={items} progress={progress} />
+
+      {/* 問い合わせ導線 */}
+      <div className="mt-8 rounded-lg border bg-gray-50 p-4 text-center">
+        <p className="mb-3 text-sm text-gray-600">解決しない場合は教育担当にお問い合わせください</p>
+        <ContactButton />
+      </div>
     </div>
   );
 }

@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUserId } from '@/lib/user';
+import { CONTACT_URL, CONTACT_LABEL } from '@/lib/config';
+import { sendLog } from '@/lib/log';
 
 type ChecklistDetailClientProps = {
   itemId: string;
@@ -19,6 +21,35 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
   const [currentStatus, setCurrentStatus] = useState<'pending' | 'resolved' | 'unresolved'>(
     'pending'
   );
+  const [copied, setCopied] = useState(false);
+
+  // ページ閲覧ログを記録
+  useEffect(() => {
+    sendLog('view', itemId);
+  }, [itemId]);
+
+  /** 現在のページURLをクリップボードにコピー */
+  const handleCopyLink = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      sendLog('share_link', itemId);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // フォールバック: clipboard APIが使えない場合
+      const textArea = document.createElement('textarea');
+      textArea.value = window.location.href;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      sendLog('share_link', itemId);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, [itemId]);
 
   const updateProgress = useMutation({
     mutationFn: async (newStatus: 'resolved' | 'unresolved') => {
@@ -33,6 +64,7 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
     onSuccess: (_data, variables) => {
       setCurrentStatus(variables);
       queryClient.invalidateQueries({ queryKey: ['checklist-items'] });
+      sendLog(variables === 'resolved' ? 'resolve' : 'unresolve', itemId);
     },
   });
 
@@ -67,6 +99,23 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
           ✗ 解決しなかった
         </Button>
       </div>
+
+      {/* リンク共有ボタン */}
+      <Button variant="secondary" className="w-full" onClick={handleCopyLink}>
+        {copied ? '✓ コピーしました！' : '🔗 この手順を送る'}
+      </Button>
+
+      {/* 問い合わせボタン */}
+      <a
+        href={CONTACT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => sendLog('contact_click', itemId)}
+      >
+        <Button variant="outline" className="w-full">
+          💬 {CONTACT_LABEL}
+        </Button>
+      </a>
 
       {/* 戻るリンク */}
       <Link href={`/day/${day}`}>
