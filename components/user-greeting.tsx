@@ -1,31 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getUserName } from '@/lib/user';
+import { useSession, signOut } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
 
 /**
  * ユーザー挨拶コンポーネント
- * ローカルストレージからユーザー名を取得して表示
+ * NextAuthセッションからユーザー名を取得して表示
  */
 export function UserGreeting() {
-  const [userName, setUserName] = useState('ゲスト');
-
-  useEffect(() => {
-    // クライアントサイドでユーザー名を取得
-    setUserName(getUserName() || 'ゲスト');
-
-    // ユーザー名更新イベントをリスン
-    const handleUpdate = (e: Event) => {
-      const detail = (e as CustomEvent<string>).detail;
-      setUserName(detail || 'ゲスト');
-    };
-    window.addEventListener('user-name-updated', handleUpdate);
-    return () => window.removeEventListener('user-name-updated', handleUpdate);
-  }, []);
+  const { data: session } = useSession();
+  const userName = session?.user?.name || 'ゲスト';
 
   return (
-    <p className="text-sm text-gray-600" suppressHydrationWarning>
-      こんにちは、<span className="font-semibold">{userName}</span>さん
-    </p>
+    <div className="flex items-center gap-3">
+      <p className="text-sm text-gray-600">
+        こんにちは、<span className="font-semibold">{userName}</span>さん
+      </p>
+      {session && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+          className="text-xs text-gray-500 hover:text-gray-700"
+        >
+          ログアウト
+        </Button>
+      )}
+    </div>
   );
 }

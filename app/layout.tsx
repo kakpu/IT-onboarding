@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { UserSetupDialog } from '@/components/user-setup-dialog';
 import { UserGreeting } from '@/components/user-greeting';
 import { Providers } from './providers';
 
@@ -37,8 +36,6 @@ export default function RootLayout({
               © 2026 IT-onboarding
             </div>
           </footer>
-
-          <UserSetupDialog />
         </Providers>
       </body>
     </html>

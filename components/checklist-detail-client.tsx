@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { getUserId } from '@/lib/user';
 import { CONTACT_URL, CONTACT_LABEL } from '@/lib/config';
 import { sendLog } from '@/lib/log';
 
@@ -17,6 +17,7 @@ type ChecklistDetailClientProps = {
  * 詳細ページのアクションボタン（クライアントコンポーネント）
  */
 export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProps) {
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [currentStatus, setCurrentStatus] = useState<'pending' | 'resolved' | 'unresolved'>(
     'pending'
@@ -56,7 +57,7 @@ export function ChecklistDetailClient({ itemId, day }: ChecklistDetailClientProp
       const res = await fetch(`/api/progress/${itemId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus, userId: getUserId() }),
+        body: JSON.stringify({ status: newStatus, userId: session?.user?.id }),
       });
       if (!res.ok) throw new Error('進捗の更新に失敗しました');
       return res.json();
