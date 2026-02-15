@@ -1,14 +1,7 @@
 import { NextRequest } from 'next/server';
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { auth } from '@/lib/auth';
-
-/**
- * チェックリスト項目取得APIのクエリパラメータスキーマ
- */
-const ChecklistItemsQuerySchema = z.object({
-  day: z.enum(['1', '2', '3']).transform(Number),
-});
+import { ChecklistItemsQuerySchema } from '@/lib/schemas';
 
 /**
  * チェックリスト項目を取得するGET API

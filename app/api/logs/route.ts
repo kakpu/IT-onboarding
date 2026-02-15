@@ -1,15 +1,6 @@
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { auth } from '@/lib/auth';
-
-/**
- * ログ記録APIのリクエストボディスキーマ
- */
-const CreateLogSchema = z.object({
-  checklistItemId: z.string().uuid().optional(),
-  action: z.enum(['view', 'resolve', 'unresolve', 'contact_click', 'share_link']),
-  metadata: z.record(z.string(), z.unknown()).optional(),
-});
+import { CreateLogSchema } from '@/lib/schemas';
 
 /**
  * 利用ログを記録するPOST API

@@ -1,15 +1,7 @@
 import { NextRequest } from 'next/server';
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { auth } from '@/lib/auth';
-
-/**
- * 進捗更新APIのリクエストボディスキーマ
- */
-const UpdateProgressSchema = z.object({
-  status: z.enum(['pending', 'resolved', 'unresolved']),
-  notes: z.string().optional(),
-});
+import { UpdateProgressSchema } from '@/lib/schemas';
 
 /**
  * 進捗を更新するPUT API

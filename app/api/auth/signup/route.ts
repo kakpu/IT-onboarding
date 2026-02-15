@@ -1,14 +1,7 @@
 import { NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
-
-/** ユーザー登録リクエストのバリデーションスキーマ */
-const SignupSchema = z.object({
-  name: z.string().min(1, '名前を入力してください').max(100),
-  email: z.string().email('有効なメールアドレスを入力してください'),
-  password: z.string().min(8, 'パスワードは8文字以上で入力してください'),
-});
+import { SignupSchema } from '@/lib/schemas';
 
 /**
  * ユーザー登録API
