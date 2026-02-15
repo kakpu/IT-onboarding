@@ -5,6 +5,7 @@ import type { NextAuthConfig } from 'next-auth';
  * ミドルウェアから使用するため、Node.js依存ライブラリを含めない
  */
 export const authConfig = {
+  trustHost: true,
   pages: {
     signIn: '/auth/signin',
   },
