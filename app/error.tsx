@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -13,7 +14,13 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  console.error('アプリケーションエラー:', error.message);
+  useEffect(() => {
+    console.error('アプリケーションエラー:', {
+      message: error.message,
+      digest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
+  }, [error]);
 
   return (
     <div className="container mx-auto flex min-h-[50vh] flex-col items-center justify-center p-4 text-center">
