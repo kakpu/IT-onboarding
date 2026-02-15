@@ -10,6 +10,7 @@ import { authConfig } from './auth.config';
  */
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
+  debug: process.env.NODE_ENV === 'development',
   providers: [
     Credentials({
       name: 'credentials',
@@ -18,38 +19,48 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'パスワード', type: 'password' },
       },
       async authorize(credentials) {
-        const email = credentials?.email as string | undefined;
-        const password = credentials?.password as string | undefined;
+        try {
+          const email = credentials?.email as string | undefined;
+          const password = credentials?.password as string | undefined;
 
-        if (!email || !password) {
+          if (!email || !password) {
+            return null;
+          }
+
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+          const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+          if (!supabaseUrl || !supabaseKey) {
+            console.error('[auth] Missing Supabase environment variables');
+            return null;
+          }
+
+          const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
+          const { data: user, error } = await supabase
+            .from('users')
+            .select('id, email, name, role, password_hash')
+            .eq('email', email)
+            .single();
+
+          if (error || !user || !user.password_hash) {
+            return null;
+          }
+
+          const isValid = await compare(password, user.password_hash);
+          if (!isValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error('[auth] authorize error:', error);
           return null;
         }
-
-        const supabase = createSupabaseClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { data: user, error } = await supabase
-          .from('users')
-          .select('id, email, name, role, password_hash')
-          .eq('email', email)
-          .single();
-
-        if (error || !user || !user.password_hash) {
-          return null;
-        }
-
-        const isValid = await compare(password, user.password_hash);
-        if (!isValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       },
     }),
   ],
