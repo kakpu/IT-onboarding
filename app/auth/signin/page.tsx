@@ -9,9 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+/** Entra IDが設定されている場合のみボタンを表示する */
+const isEntraIdEnabled = !!process.env.NEXT_PUBLIC_ENTRA_ID_ENABLED;
+
 /**
  * ログインページ
- * メールアドレス＋パスワードでの認証
+ * メールアドレス＋パスワード認証と、Entra ID（企業SSO）認証を提供
  */
 export default function SignInPage() {
   const router = useRouter();
@@ -53,6 +56,29 @@ export default function SignInPage() {
           <CardDescription>ITオンボーディングシステム</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Entra ID（企業SSO）ログイン - 環境変数が設定されている場合のみ表示 */}
+          {isEntraIdEnabled && (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                className="mb-4 min-h-[44px] w-full"
+                onClick={() => signIn('microsoft-entra-id', { callbackUrl: '/' })}
+              >
+                会社のアカウントでログイン（Entra ID）
+              </Button>
+
+              <div className="relative mb-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-gray-500">または</span>
+                </div>
+              </div>
+            </>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="rounded-md bg-red-50 p-3 text-center text-sm text-red-600">
