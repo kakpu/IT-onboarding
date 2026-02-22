@@ -56,12 +56,20 @@ export default function AdminDashboard() {
     <div className="container mx-auto p-4">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">管理ダッシュボード</h1>
-        <Link
-          href="/admin/items"
-          className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-100"
-        >
-          項目管理
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/admin/users"
+            className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-100"
+          >
+            ユーザー管理
+          </Link>
+          <Link
+            href="/admin/items"
+            className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-100"
+          >
+            項目管理
+          </Link>
+        </div>
       </div>
 
       {/* サマリーカード */}

@@ -25,6 +25,27 @@ export const ChecklistItemsQuerySchema = z.object({
   day: z.enum(['1', '2', '3']).transform(Number),
 });
 
+/** 管理者用ユーザー一覧取得クエリスキーマ */
+export const UsersQuerySchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .default('1')
+    .transform((v) => Math.max(1, parseInt(v))),
+  limit: z
+    .string()
+    .optional()
+    .default('50')
+    .transform((v) => Math.min(100, Math.max(1, parseInt(v)))),
+  search: z.string().optional(),
+});
+
+/** 管理者用ユーザーロール更新スキーマ */
+export const UserUpdateRoleSchema = z.object({
+  id: z.string().uuid(),
+  role: z.enum(['user', 'trainer', 'admin']),
+});
+
 /** 管理者用チェックリスト項目作成スキーマ */
 export const ItemCreateSchema = z.object({
   day: z.number().int().min(1).max(3),
