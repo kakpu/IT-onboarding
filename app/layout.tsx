@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Toaster } from 'sonner';
 import './globals.css';
 import { UserGreeting } from '@/components/user-greeting';
 import { Providers } from './providers';
@@ -39,6 +40,7 @@ export default function RootLayout({
             </div>
           </footer>
         </Providers>
+        <Toaster richColors />
         <Analytics />
         <SpeedInsights />
       </body>

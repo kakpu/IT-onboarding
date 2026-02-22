@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import {
@@ -35,7 +36,7 @@ export default function AdminDashboard() {
     return (
       <div className="container mx-auto p-4">
         <h1 className="mb-6 text-2xl font-bold">管理ダッシュボード</h1>
-        <p className="text-gray-600">読み込み中...</p>
+        <p className="text-gray-500">読み込み中...</p>
       </div>
     );
   }
@@ -53,7 +54,15 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="mb-6 text-2xl font-bold">管理ダッシュボード</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">管理ダッシュボード</h1>
+        <Link
+          href="/admin/items"
+          className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-100"
+        >
+          項目管理
+        </Link>
+      </div>
 
       {/* サマリーカード */}
       <div className="mb-8 grid gap-4 md:grid-cols-3">
